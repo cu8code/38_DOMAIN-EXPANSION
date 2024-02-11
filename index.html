@@ -78,8 +78,8 @@
         </div>
         <form id="chat-form" class="chat-form">
             <input type="text" id="chat-input" placeholder="Type a message..." autocomplete="off">
-            <button type="submit">Send</button>
-            <button type="button" onclick="togglePause()">Pause</button>
+            <button type="submit" id="submit">Send</button>
+            <button type="button" id="pause" onclick="togglePause()">Pause</button>
         </form>
     </div>
     <script>
@@ -93,15 +93,16 @@
         let isP = false
 
         function togglePause() {
+            const pause = document.getElementById("pause")
             if(isP){
                 speechSynthesis.resume()
                 isP = false
-                console.log("resume");
+                pause.textContent = "pause"
                 return
             }
             isP= true
-                console.log("pause");
             speechSynthesis.pause()
+            pause.textContent = "resume"
         }
 
         function sendMessage(text) {
@@ -123,12 +124,20 @@
                     speechSynthesis.speak(msg)
                     msg.addEventListener("start",() => {
                         const inputField = document.getElementById('chat-input');
+                        const sumbit = document.getElementById("submit")
+                        sumbit.style.background = "#EBEBE4"
+                        sumbit.style.color = "gray"
+                        sumbit.innerText = "disable"
                         inputField.disabled = true
-                        console.log("running");
+                        inputField.value = "we disable the input when speaking"
                     })
                     msg.addEventListener("end",() => {
+                        const sumbit = document.getElementById("submit")
                         const inputField = document.getElementById('chat-input');
+                        sumbit.style.background = ""
+                        sumbit.style.color = ""
                         inputField.disabled = false
+                        inputField.value = ""
                     })
 
                     if (data.error) {
