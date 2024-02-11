@@ -65,6 +65,9 @@
             text-align: right;
             color: #555;
         }
+        form {
+            gap: 1rem;
+        }
     </style>
 </head>
 
@@ -76,6 +79,7 @@
         <form id="chat-form" class="chat-form">
             <input type="text" id="chat-input" placeholder="Type a message..." autocomplete="off">
             <button type="submit">Send</button>
+            <button type="button" onclick="togglePause()">Pause</button>
         </form>
     </div>
     <script>
@@ -86,22 +90,34 @@
             inputField.value = '';
         });
 
+        let isP = false
+
+        function togglePause() {
+            if(isP){
+                speechSynthesis.resume()
+                isP = false
+                console.log("resume");
+                return
+            }
+            isP= true
+                console.log("pause");
+            speechSynthesis.pause()
+        }
+
         function sendMessage(text) {
             console.log("user");
             displayMessage(text, 'user');
-            fetch('/predict', { // Updated to local server endpoint
+            fetch('/predict', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    // Replace with the inputs required by your Replicate model
                     input: text
                 })
             })
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data);
                     const msg = new SpeechSynthesisUtterance(data.join(''))
                     speechSynthesis.speak(msg)
                     if (data.error) {
