@@ -91,6 +91,7 @@
         });
 
         let isP = false
+        speechSynthesis.resume()
 
         function togglePause() {
             const pause = document.getElementById("pause")
@@ -120,7 +121,6 @@
                 .then(response => response.json())
                 .then(data => {
                     const msg = new SpeechSynthesisUtterance(data.join(''))
-
                     speechSynthesis.speak(msg)
                     msg.addEventListener("start",() => {
                         const inputField = document.getElementById('chat-input');
