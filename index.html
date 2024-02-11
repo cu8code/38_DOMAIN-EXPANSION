@@ -119,7 +119,18 @@
                 .then(response => response.json())
                 .then(data => {
                     const msg = new SpeechSynthesisUtterance(data.join(''))
+
                     speechSynthesis.speak(msg)
+                    msg.addEventListener("start",() => {
+                        const inputField = document.getElementById('chat-input');
+                        inputField.disabled = true
+                        console.log("running");
+                    })
+                    msg.addEventListener("end",() => {
+                        const inputField = document.getElementById('chat-input');
+                        inputField.disabled = false
+                    })
+
                     if (data.error) {
                         displayMessage(data.error.message, 'bot');
                     } else {
